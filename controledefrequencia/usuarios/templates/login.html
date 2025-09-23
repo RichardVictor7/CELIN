@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="container">
+        <img src="{% static 'img/logoifce.png' %}" alt="" class="logo">
+        <img src="{% static 'img/logocelin.png' %}" alt="" class="logo">
+    </div>
+
+    <form action="" method="post">
+        <h1>Acadêmico - CELIN</h1>
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Usuário</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Senha</label>
+            {{ form.password }}
+        </div>
+
+        <input type="submit" value="Entrar">
+    </form>
+
+    <!-- Mensagem de erro fora do form -->
+    {% if form.non_field_errors %}
+        <div class="error-message">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</body>
+</html>

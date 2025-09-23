@@ -1,0 +1,84 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Aula</title>
+    <link rel="stylesheet" href="{% static 'css/presenca.css' %}">
+</head>
+<body>
+    <h1>Editar Aula</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="nome_aula">Assunto da Aula:</label>
+            <input type="text" id="nome_aula" name="nome_aula" 
+                   value="{{ aula.nome }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="data_aula">Data da Aula:</label>
+            <input type="date" id="data_aula" name="data_aula" 
+                   value="{{ aula.data|date:'Y-m-d' }}" required>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Faltas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno, faltas in alunos_com_faltas %}
+                <tr>
+                    <td>{{ aluno.nome }}</td>
+                    <td>
+                        <input type="number" name="faltas_{{ aluno.id }}" 
+                               value="{{ faltas }}" min="0" max="2">
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">Nenhum aluno registrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="center">
+            <button type="submit">Salvar Alterações</button>
+        </div> 
+
+        <input type="hidden" name="turma_id" value="{{ turma.id }}">
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+
+            inputs.forEach((input, index) => {
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === "ArrowDown") {
+                        e.preventDefault(); // impede o comportamento padrão
+                        const nextInput = inputs[index + 1];
+                        if (nextInput) {
+                            nextInput.focus();
+                        }
+                    } else if (e.key === "ArrowUp") {
+                        e.preventDefault(); // sobe para o input anterior
+                        const prevInput = inputs[index - 1];
+                        if (prevInput) {
+                            prevInput.focus();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

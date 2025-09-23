@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    
+    <div class="cards">
+
+        {% for turma in turmas %}
+            <div class="card">
+                <h3>{{ turma.nome }}</h3>
+                
+                <a href="{% url 'presenca' turma_id=turma.id %}">Lista de frequencia</a>
+
+                <a href="{% url 'view_alunos' turma_id=turma.id %}">Alunos</a>
+                
+            </div>
+        {% empty %}
+            <p class="empty-message">Você ainda não possui turmas cadastradas.</p>
+        {% endfor %}
+        
+    </div>
+
+</body>
+</html>

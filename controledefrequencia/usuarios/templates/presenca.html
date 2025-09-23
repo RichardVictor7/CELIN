@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Frequência</title>
+    <link rel="stylesheet" href="{% static 'css/presenca.css' %}">
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="historico">
+            <h2>Histórico de Aulas</h2>
+
+            {% for aula in aulas %}
+                <div class="aula">
+                    <div class="nome">{{ aula.nome }}</div>
+                    <div class="data">{{ aula.data|date:"d/m/Y" }}</div>
+
+                    <div class="acoes">
+                        <a href="{% url 'visualizar_aula' aula_id=aula.id %}">Visualizar</a> |
+                        <a href="{% url 'editar_aula' aula_id=aula.id %}">Editar</a> |
+                        <a href="{% url 'excluir_aula' aula_id=aula.id %}" 
+                        onclick="return confirm('Tem certeza que deseja excluir esta aula?');">
+                            Excluir
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty-message">Nenhuma aula registrada.</p>
+            {% endfor %}
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <h1>Lista de Frequência</h1>
+
+            <div class="form-group">
+                <label for="nome_aula">Assunto da Aula:</label>
+                <input type="text" id="nome_aula" name="nome_aula" placeholder="Digite o nome da aula" required>
+            </div>
+
+            <div class="form-group">
+                <label for="data_aula">Data da Aula:</label>
+                <input type="date" id="data_aula" name="data_aula" required>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Falta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                        <tr>
+                            <td>{{ aluno.nome }}</td>
+                            <td>
+                                <input type="number" name="faltas_{{ aluno.id }}" min="0" max="2" class="faltas">
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2" class="empty-message">Nenhum aluno registrado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="center">
+                <button type="submit">Confirmar Presença</button>
+            </div>
+
+            <input type="hidden" name="turma_id" value="{{ turma.id }}">
+        </form>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = Array.from(document.querySelectorAll('input.faltas'));
+
+            inputs.forEach((input, index) => {
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === "ArrowDown") {
+                        e.preventDefault(); // impede o comportamento padrão
+                        const nextInput = inputs[index + 1];
+                        if (nextInput) {
+                            nextInput.focus();
+                        }
+                    } else if (e.key === "ArrowUp") {
+                        e.preventDefault(); // sobe para o input anterior
+                        const prevInput = inputs[index - 1];
+                        if (prevInput) {
+                            prevInput.focus();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
