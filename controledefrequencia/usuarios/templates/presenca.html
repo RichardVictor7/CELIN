@@ -17,7 +17,7 @@
             {% for aula in aulas %}
                 <div class="aula">
                     <div class="nome">{{ aula.nome }}</div>
-                    <div class="data">{{ aula.data|date:"d/m/Y" }}</div>
+                    <div class="data">{{ aula.data|date:"m/d/Y" }}</div>
 
                     <div class="acoes">
                         <a href="{% url 'visualizar_aula' aula_id=aula.id %}">Visualizar</a> |
