@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Turma(models.Model):
     nome = models.TextField()
-    professor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='turmas')
+    professor = models.ManyToManyField(User, related_name='turmas')
     alunos = models.ManyToManyField(Aluno, related_name='turmas')
 
     def __str__(self):
